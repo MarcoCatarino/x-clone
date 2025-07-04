@@ -12,7 +12,7 @@ import { protectRoute } from "../middlewares/auth.middleware.js";
 const router = express.Router();
 
 //TODO: Public Routes
-//? Get Routes
+//? Get User
 router.get("/profile/:username", getUserProfile);
 
 //TODO: Protected Routes
