@@ -5,8 +5,16 @@ import { connectDB } from "./config/db.js";
 
 const app = express();
 
-connectDB();
-
 app.get("/", (req, res) => res.send("Hello from Server"));
 
-app.listen(ENV.PORT, () => console.log(`Server in port: ${ENV.PORT}`));
+const startServer = async () => {
+  try {
+    await connectDB();
+    app.listen(ENV.PORT, () => console.log(`Server in port: ${ENV.PORT}`));
+  } catch (error) {
+    console.error("Failed to Start Server: ", error.message);
+    process.exit(1);
+  }
+};
+
+startServer();
