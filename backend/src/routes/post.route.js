@@ -8,6 +8,7 @@ import {
   createPost,
   deletePost,
 } from "../controllers/post.controller.js";
+
 import { protectRoute } from "../middlewares/auth.middleware.js";
 import upload from "../middlewares/upload.middleware.js";
 

@@ -1,11 +1,12 @@
 import asyncHandler from "express-async-handler";
 import { getAuth } from "@clerk/express";
 
+import cloudinary from "../config/cloudinary.js";
+
 import User from "../models/user.model.js";
 import Post from "../models/post.model.js";
-
-import cloudinary from "../config/cloudinary.js";
 import Notification from "../models/notification.model.js";
+import Comment from "../models/comment.model.js";
 
 //  TODO: Get Posts
 export const getPosts = asyncHandler(async (req, res) => {
