@@ -20,7 +20,7 @@ app.use(express.json());
 app.use(clerkMiddleware());
 app.use(arcjetMiddleware); // We don't initialize '()' because it's going to be called by express when we run the Server by default
 
-app.get("/", (req, res) => res.send("Hello from Server 2.0")); // Prueba
+app.get("/", (req, res) => res.send("Hello from Server 2.1")); // Prueba
 
 // TODO: Routes
 app.use("/api/users", userRoutes);
