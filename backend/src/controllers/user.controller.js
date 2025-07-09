@@ -4,6 +4,35 @@ import asyncHandler from "express-async-handler";
 import User from "../models/user.model.js";
 import Notification from "../models/notification.model.js";
 
+// TODO: Save User Database
+export const syncUser = asyncHandler(async (req, res) => {
+  const { userId } = getAuth(req);
+
+  //? check if user already exists in mongodb
+  const existingUser = await User.findOne({ clerkId: userId });
+  if (existingUser) {
+    return res
+      .status(200)
+      .json({ user: existingUser, message: "User already exists" });
+  }
+
+  //? create new user from Clerk data
+  const clerkUser = await clerkClient.users.getUser(userId);
+
+  const userData = {
+    clerkId: userId,
+    email: clerkUser.emailAddresses[0].emailAddress,
+    firstName: clerkUser.firstName || "",
+    lastName: clerkUser.lastName || "",
+    username: clerkUser.emailAddresses[0].emailAddress.split("@")[0],
+    profilePicture: clerkUser.imageUrl || "",
+  };
+
+  const user = await User.create(userData);
+
+  res.status(201).json({ user, message: "User created successfully" });
+});
+
 // TODO: Get User
 export const getUserProfile = asyncHandler(async (req, res) => {
   const { username } = req.params;
@@ -37,43 +66,13 @@ export const updateProfile = asyncHandler(async (req, res) => {
   res.status(200).json({ user });
 });
 
-// TODO: Save User Database
-export const syncUser = asyncHandler(async (req, res) => {
-  const { userId } = getAuth(req);
-
-  //* Check if user already exist in our DB
-  const existingUser = await User.findOne({ clerkId: userId });
-  if (existingUser) {
-    return res
-      .status(200)
-      .json({ user: existingUser, message: "User already exists in DB" });
-  }
-
-  //* Create new User from Clerk Data
-  const clerkUser = await clerkClient.users.getUser(userId);
-
-  //? Data we're getting from Clerk
-  const userData = {
-    clerkId: userId,
-    email: clerkUser.emailAddresses[0].emailAddress,
-    firstName: clerkUser.firstName || "",
-    lastName: clerkUser.lastName || "",
-    username: clerkUser.emailAddresses[0].emailAddress.split("@")[0], //marco@gmail.com -> marco
-    profilePicture: clerkUser.imageUrl || "",
-  };
-
-  const user = await User.create(userData);
-
-  res.status(201).json({ user, messsage: "User created Successfuly" });
-});
-
 // TODO: Follow User
 export const followUser = asyncHandler(async (req, res) => {
   const { userId } = getAuth(req);
   const { targetUserId } = req.params;
 
   if (userId === targetUserId)
-    return res.status(400).json({ error: "You can't follow yourself" });
+    return res.status(400).json({ error: "You cannot follow yourself" });
 
   const currentUser = await User.findOne({ clerkId: userId });
   const targetUser = await User.findById(targetUserId);
@@ -84,7 +83,7 @@ export const followUser = asyncHandler(async (req, res) => {
   const isFollowing = currentUser.following.includes(targetUserId);
 
   if (isFollowing) {
-    //* Unfollow
+    //? unfollow
     await User.findByIdAndUpdate(currentUser._id, {
       $pull: { following: targetUserId },
     });
@@ -92,7 +91,7 @@ export const followUser = asyncHandler(async (req, res) => {
       $pull: { followers: currentUser._id },
     });
   } else {
-    //* Follow
+    //? follow
     await User.findByIdAndUpdate(currentUser._id, {
       $push: { following: targetUserId },
     });
@@ -100,7 +99,7 @@ export const followUser = asyncHandler(async (req, res) => {
       $push: { followers: currentUser._id },
     });
 
-    //* Create Notification
+    //? create notification
     await Notification.create({
       from: currentUser._id,
       to: targetUserId,
