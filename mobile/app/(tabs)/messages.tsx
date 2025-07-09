@@ -2,16 +2,13 @@ import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { Text } from "react-native";
-import SignOutButton from "@/components/SignOutButton";
 
-const HomeScreen = () => {
+const MessagesScreen = () => {
   return (
     <SafeAreaView className="flex-1">
-      <Text>HomeScreen</Text>
-
-      <SignOutButton />
+      <Text>MessagesScreen</Text>
     </SafeAreaView>
   );
 };
 
-export default HomeScreen;
+export default MessagesScreen;
