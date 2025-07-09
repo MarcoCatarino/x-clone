@@ -20,7 +20,7 @@ app.use(express.json());
 app.use(clerkMiddleware());
 app.use(arcjetMiddleware); // We don't initialize '()' because it's going to be called by express when we run the Server by default
 
-app.get("/", (req, res) => res.send("Hello from Server")); // Prueba
+app.get("/", (req, res) => res.send("Hello from Server 2.1")); // Prueba
 
 // TODO: Routes
 app.use("/api/users", userRoutes);
@@ -30,8 +30,8 @@ app.use("/api/notifications", notificationRoutes);
 
 // TODO: Middleware
 app.use((err, req, res, next) => {
-  console.error("Unhandled error: ", err);
-  res.status(500).json({ error: err.message || "Internal Server Error" });
+  console.error("Unhandled error:", err);
+  res.status(500).json({ error: err.message || "Internal server error" });
 });
 
 // TODO: Start Server

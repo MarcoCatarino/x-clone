@@ -9,7 +9,7 @@ const TabsLayout = () => {
   const { isSignedIn } = useAuth();
 
   if (!isSignedIn) return <Redirect href="/(auth)" />;
-  
+
   return (
     <Tabs
       screenOptions={{
@@ -20,7 +20,7 @@ const TabsLayout = () => {
           borderTopWidth: 1,
           borderTopColor: "#E1E8ED",
           height: 50 + insets.bottom,
-          padding: 8,
+          paddingTop: 8,
         },
         headerShown: false,
       }}
@@ -41,6 +41,7 @@ const TabsLayout = () => {
         name="search"
         options={{
           title: "",
+
           tabBarIcon: ({ color, size }) => (
             <Feather name="search" size={size} color={color} />
           ),
@@ -52,6 +53,7 @@ const TabsLayout = () => {
         name="notifications"
         options={{
           title: "",
+
           tabBarIcon: ({ color, size }) => (
             <Feather name="bell" size={size} color={color} />
           ),
@@ -63,6 +65,7 @@ const TabsLayout = () => {
         name="messages"
         options={{
           title: "",
+
           tabBarIcon: ({ color, size }) => (
             <Feather name="mail" size={size} color={color} />
           ),
